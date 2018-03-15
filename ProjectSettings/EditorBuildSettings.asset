@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/scene/rogoOnSoranoana2.unity
+    guid: 6d0a6d9565ac2c741b388837ae39f39e
+  - enabled: 1
+    path: Assets/scene/title.unity
+    guid: ad29c065a243b4644915e93575f3e774
+  - enabled: 1
+    path: Assets/scene/lecture.unity
+    guid: 9bb4f033337575b42aa3128910bf52d5
+  - enabled: 1
+    path: Assets/scene/option.unity
+    guid: aa1397a6add342c41b7883b07499a7a4
+  - enabled: 1
+    path: Assets/scene/pleaseTakeWearVR.unity
+    guid: a8a86901e44992348812e9673a21a44b
+  - enabled: 1
+    path: Assets/scene/PleaseTakeOffVr.unity
+    guid: 4ebd38d12254a59419ef6aacf3061489
+  - enabled: 1
+    path: Assets/scene/shop.unity
+    guid: bed46164bdedc0648a0c5f2862265a7c
+  - enabled: 0
+    path: Assets/scene/test/fieldTestFish.unity
+    guid: a109af743209781458300c35389473e6
+  - enabled: 0
+    path: Assets/scene/test/cameraTest.unity
+    guid: 8a22dbc1fdcc6934682a23d128657bf6
+  - enabled: 1
+    path: Assets/scene/test/cameraTest2.unity
+    guid: a07fd1dc554871a419eaca3c52711ce7
+  - enabled: 0
+    path: Assets/scene/test/cameraTest3.unity
+    guid: f13beb6533c06864d8eb52ba73d0193f
