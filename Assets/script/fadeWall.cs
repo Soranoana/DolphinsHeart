@@ -41,21 +41,21 @@ public class fadeWall : MonoBehaviour {
         gameObject.GetComponent<MeshRenderer>().material.color = new Color(1,1,1,1.0f*fade/255);
 	}
 
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player") {
             if (transform.name == "wallSouth") {
-                other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y,249);
+                other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y,248);
             }else if (transform.name == "wallNorth")
             {
-                other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y, -249);
+                other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y, -248);
             }else if (transform.name == "wallWest")
             {
-                other.transform.position = new Vector3(249,other.transform.position.y, other.transform.position.z);
+                other.transform.position = new Vector3(248,other.transform.position.y, other.transform.position.z);
             }
             else if (transform.name == "wallEast")
             {
-                other.transform.position = new Vector3(-249, other.transform.position.y, other.transform.position.z);
+                other.transform.position = new Vector3(-248, other.transform.position.y, other.transform.position.z);
             }
         }
     }

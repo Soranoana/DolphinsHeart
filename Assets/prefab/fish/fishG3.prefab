@@ -289,9 +289,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4407660271374416}
+  - component: {fileID: 114700364695142008}
   m_Layer: 0
   m_Name: fishG3
-  m_TagString: Untagged
+  m_TagString: Fish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -693,7 +694,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1443651020620274}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 58.4, z: 22.54}
+  m_LocalPosition: {x: 32.04, y: 58.4, z: 25}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4680232041789222}
@@ -1027,6 +1028,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b2cd15b446eb984995ef60529f4e9fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114700364695142008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1443651020620274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b5895dafa6dafe4aa4d40107c2fb5d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimapIcon1: {fileID: 1846761014254214, guid: 982ce5943476ced478b29875cd9b36e0,
+    type: 2}
+  minimapIcon2: {fileID: 0}
 --- !u!122 &122854864202141374
 Halo:
   m_ObjectHideFlags: 1
@@ -1036,7 +1051,7 @@ Halo:
   m_Enabled: 1
   m_Color:
     serializedVersion: 2
-    rgba: 4278197760
+    rgba: 4281466930
   m_Size: 4
 --- !u!135 &135440167553991246
 SphereCollider:
@@ -1059,11 +1074,12 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 018a19426c2206c4bbc36f5f72a7aae5, type: 2}
+  - {fileID: 2100000, guid: 3ebc2632279178c4790e32585e264517, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1074,6 +1090,7 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5

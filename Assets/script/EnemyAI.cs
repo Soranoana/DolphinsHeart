@@ -18,13 +18,17 @@ public class EnemyAI : MonoBehaviour {
 	private float speed;	//スピード値
 	private Vector3 current;			//縄張りの中心
 	private bool arrived;		//目的地到着フラグ
+    private float arrivedRange=1.5f; //到着フラグ発生距離
+    private float chaseRange = 100;
 	private float waitTime;		//待ち移行時間
 	private float currentTime;	//現在時間
 	private int state;		//モード
 	private GameObject Player;		//ゲームオブジェクトPlayer取得
 	private int flameCount;
 	private Vector3 randDestination;  //ランダム座標
-	
+    /* アイコン */
+    private samonIcon samonicon;
+
     /*モードの種類
 	walk,			//徘徊		0
 	wait,			//待機		1
@@ -32,14 +36,16 @@ public class EnemyAI : MonoBehaviour {
 	*/
 /*------------------------------スタート-----------------------------------*/
 	void Start () {
-        if (transform.name == "shark"|| transform.name == "human") {
+        if (transform.name == "shark" || transform.name == "human") {
             myType = 1;
-        }else if (transform.name == "manbou"|| transform.name == "kuzira"|| transform.name == "hugu") {
+        } else if (transform.name == "manbou" || transform.name == "kuzira" || transform.name == "hugu") {
             myType = 2;
-        }else if (transform.name == "ship") {
+        } else if (transform.name == "ship") {
             myType = 3;
-        }else if (transform.name == "nidle"|| transform.name == "kirai" || transform.name == "jammer" || transform.name == "kurage" || transform.name == "garbage") {
+        } else if (transform.name == "nidle" || transform.name == "kirai" || transform.name == "jammer" || transform.name == "kurage" || transform.name == "garbage") {
             myType = 4;
+        } else if (transform.name =="enemy") {
+            myType = 5;
         } else {
             myType = 100;
         }
@@ -53,6 +59,8 @@ public class EnemyAI : MonoBehaviour {
 		flameCount = 0;
 		current = transform.position;//スポーン地点を縄張りの中心に設定
 		destination = transform.position;
+        /* アイコンスクリプト取得 */
+        samonicon = gameObject.GetComponent<samonIcon>();
 	}
 /*------------------------------アップデート-----------------------------------*/
 	void Update () {
@@ -68,7 +76,9 @@ public class EnemyAI : MonoBehaviour {
             nonmoveUpdate();
         }else if (myType == 100) {
             errorUpdate();
-        }else {
+        }else if (myType==5){
+            activeUpdate();
+        } else {
             return;
         }
     }
@@ -81,38 +91,25 @@ public class EnemyAI : MonoBehaviour {
     private void activeUpdate() {
         flameCount++;
         chaseArea();
-        if (Vector3.Distance(destination, transform.position) == 0)
-        {
+        if (Vector3.Distance(destination, transform.position) <= 3) {
             arrived = true;                     //目的地到着
-        }
-        else
-        {
+        } else {
             arrived = false;
         }
-        if (!arrived)
-        {   //目的地に到着していない
-            if (state == /*walk*/0)
-            {           //モードはwalkか
+        if (!arrived) {   //目的地に到着していない
+            if (state == /*walk*/0) {           //モードはwalkか
                 walk(destination);              //　見回り、目的地を再設定
-            }
-            else if (state == 2)
-            {    //モードがchase
+            } else if (state == 2) {    //モードがchase
                 walk(Player.transform.position);                //　プレイヤーを目的地に設定
             }
-        }
-        else if (arrived)
-        {                       //目的地に到着している
-            if (state == 0)
-            {
+        } else if (arrived) {                       //目的地に到着している
+            if (state == 0) {
                 setState(1);
-            }
-            else if (state == 2)
-            {
+            } else if (state == 2) {
                 setState(1);
             }
         }
-        if (state == /*wait*/1)
-        {           //モードがwaitか
+        if (state == /*wait*/1) {           //モードがwaitか
             wait();             //待ち関数呼び出し
         }
     }
@@ -120,7 +117,7 @@ public class EnemyAI : MonoBehaviour {
     private void nonactiveUpdate() {
         flameCount++;
         //chaseArea();
-        if (Vector3.Distance(destination, transform.position) == 0)
+        if (Vector3.Distance(destination, transform.position) <= 3)
         {
             arrived = true;                     //目的地到着
         }
@@ -175,14 +172,23 @@ public class EnemyAI : MonoBehaviour {
 			arrived = false;				//目的地についていない
 			state = /*walk*/0;				//モードをwalkに
 			destination = setDestination();		//目的地再設定
+            if (myType == 1) {
+                samonicon.IconSwitchFlg(2, true);   //アイコンを２番に設定
+                samonicon.IconFlashFlg(false);
+            }
 		} else if(nextState == /*chase*/2) {			//chaseで呼び出されたか
 			state = /*chase*/2;				//モードをchaseに設定
 			arrived = false;				//　待機状態から追いかける場合もあるのでOff		目的地についていない
 			destination = setDestination(Player.transform.position);		//目的地再設定
+            samonicon.IconFlashFlg(true);   //アイコンをフラッシュさせる
 		} else if(nextState == /*wait*/1) {			//waitで呼び出されたか
 			state=/*wait*/1;				//モードをwaitに設定
 			arrived = true;					//目的地に到着
 			currentTime = 0.0f;				//currentTime初期化
+            if (myType == 1) {
+                samonicon.IconSwitchFlg(1, true);   //アイコンを１番に設定
+                samonicon.IconFlashFlg(false);
+            }
 			wait();
 		}
 	}
@@ -211,12 +217,12 @@ public class EnemyAI : MonoBehaviour {
 	}
 /*------------------------------縄張り-----------------------------------*/
 	void chaseArea(){
-		if(Vector3.Distance(Player.transform.position, transform.position) < 2f|| Vector3.Distance(Player.transform.position, transform.position) >= 50f){
+		if(Vector3.Distance(Player.transform.position, transform.position) < arrivedRange || Vector3.Distance(Player.transform.position, transform.position) >= chaseRange){
             if (state == 2)
             {
                 setState(1);            //waitになる
             }
-        }else if(Vector3.Distance(Player.transform.position, transform.position) < 50f){
+        }else if(Vector3.Distance(Player.transform.position, transform.position) < chaseRange){
             if (state == 0)
             {
                 setState(2);            //chaseになる

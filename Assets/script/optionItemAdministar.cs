@@ -9,7 +9,7 @@ public class optionItemAdministar : MonoBehaviour {
     private int fishPoint;
     /* 残り魚 */
     public int currentFish;
-    /* アイテム使用用int */    ///アイテム追加時追加
+    /* アイテム使用用int */                                                ///アイテム追加時追加
     public int dashSpeed1;
     public int dashSpeed2;
     public int dashSpeed3;
@@ -34,7 +34,7 @@ public class optionItemAdministar : MonoBehaviour {
     public int nextGameTuyokute1;
     public int cheatMode1;
     public int DLCcontents1;
-    /* アイテムのコスト */    ///アイテム追加時追加
+    /* アイテムのコスト */                                                 ///アイテム追加時追加
     private int dashSpeedCost1;
     private int dashSpeedCost2;
     private int dashSpeedCost3;
@@ -71,7 +71,7 @@ public class optionItemAdministar : MonoBehaviour {
         currentFish = PlayerPrefs.GetInt("currentFish");
         transform.Find("TextMaxNumber").GetComponent<Text>().text = fishPoint.ToString();
         transform.Find("TextCurrentNumber").GetComponent<Text>().text = currentFish.ToString();
-        /* 各bool初期化 */            ///アイテム追加時追加
+        /* 各bool初期化 */                                                  ///アイテム追加時追加
         /* 0 未使用 1 使用中 */
         dashSpeed1 = PlayerPrefs.GetInt("dashSpeed1");
         dashSpeed2 = PlayerPrefs.GetInt("dashSpeed2");
@@ -97,7 +97,7 @@ public class optionItemAdministar : MonoBehaviour {
         nextGameTuyokute1 = PlayerPrefs.GetInt("nextGameTuyokute1");
         cheatMode1 = PlayerPrefs.GetInt("cheatMode1");
         DLCcontents1 = PlayerPrefs.GetInt("DLCcontents1");
-        /* トグル初期化 */            ///アイテム追加時追加
+        /* トグル初期化 */                                                    ///アイテム追加時追加
         content = transform.Find("ScrollView").gameObject.transform.Find("Content").gameObject;
         /* アイテム情報用 */
         nowItem = 0;
@@ -303,7 +303,7 @@ public class optionItemAdministar : MonoBehaviour {
             content.transform.Find("DLCcontents1").gameObject.transform.Find("Toggle").GetComponent<Toggle>().isOn = false;
         }
 
-        /* コスト設定 */         ///アイテム追加時追加
+        /* コスト設定 */                                                          ///アイテム追加時追加
         dashSpeedCost1 = 10;
         dashSpeedCost2 = 10;
         dashSpeedCost3 = 10;
@@ -336,7 +336,7 @@ public class optionItemAdministar : MonoBehaviour {
         contentInfoUpdata();
     }
 
-    void UpdateCurrentFish() {                            ///アイテム追加時追加
+    void UpdateCurrentFish() {                                                                  ///アイテム追加時追加
         //残りの魚数を更新
         currentFish = fishPoint - (dashSpeed1 * dashSpeedCost1
                                     + dashSpeed2 * dashSpeedCost2
@@ -365,7 +365,7 @@ public class optionItemAdministar : MonoBehaviour {
         transform.Find("TextCurrentNumber").GetComponent<Text>().text = currentFish.ToString();
     }
 
-    public void falseToTrue(string name) {                  ///アイテム追加時追加
+    public void falseToTrue(string name) {                                          ///アイテム追加時追加
         //ローカルからのtrue変更用 
         if (name == "dashSpeed1") { dashSpeed1 = 1; }
         else if (name == "dashSpeed2") { dashSpeed2 = 1; }
@@ -394,7 +394,7 @@ public class optionItemAdministar : MonoBehaviour {
         else return;
         }
 
-    public void trueToFalse(string name){          ///アイテム追加時追加
+    public void trueToFalse(string name){                                            ///アイテム追加時追加
         //ローカルからのfalse変更用 
         if (name == "dashSpeed1") { dashSpeed1 = 0; }
         else if (name == "dashSpeed2") { dashSpeed2 = 0; }
@@ -423,7 +423,7 @@ public class optionItemAdministar : MonoBehaviour {
         else return;
     }
 
-    public int CostReturn(string name) {                    ///アイテム追加時追加
+    public int CostReturn(string name) {                                                ///アイテム追加時追加
         if (name == "dashSpeed1") { return dashSpeedCost1; }
         else if (name == "dashSpeed2") { return dashSpeedCost2; }
         else if (name == "dashSpeed3") { return dashSpeedCost3; }
@@ -453,7 +453,7 @@ public class optionItemAdministar : MonoBehaviour {
         }
     }
 
-    public string getContentName(string name) {    ///アイテム追加時追加
+    public string getContentName(string name) {                                      ///アイテム追加時追加
         if (name == "dashSpeed1") { return "基礎スピードアップ"; }
         else if (name == "dashSpeed2") { return "基礎スピードアップ2"; }
         else if (name == "dashSpeed3") { return "基礎スピードアップ3"; }
@@ -481,7 +481,7 @@ public class optionItemAdministar : MonoBehaviour {
         else return "Error : Content name is not found.";
     }
 
-    private void dateSave() {    ///アイテム追加時追加
+    private void dateSave() {                                                        ///アイテム追加時追加
         /* データセーブ */
         PlayerPrefs.SetInt("currentFish", currentFish);
         /* 能力など */
@@ -511,7 +511,7 @@ public class optionItemAdministar : MonoBehaviour {
         PlayerPrefs.SetInt("DLCcontents1", DLCcontents1);
     }
 
-    public void contentTouch(string name) {    ///アイテム追加時追加
+    public void contentTouch(string name) {                                              ///アイテム追加時追加
         if (name == "dashSpeed1") nowItem=100;
         else if (name == "dashSpeed2") { nowItem = 101; }
         else if (name == "dashSpeed3") { nowItem = 102; }
@@ -539,7 +539,7 @@ public class optionItemAdministar : MonoBehaviour {
         else nowItem = -1; ;
     }
 
-    private void contentInfoUpdata() {    ///アイテム追加時追加
+    private void contentInfoUpdata() {                                                       ///アイテム追加時追加
         if (nowItem == 0) {
             textArea.GetComponent<Text>().text = "";
         }

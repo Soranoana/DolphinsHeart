@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace UnityEditor.Purchasing
         static readonly string k_PackageName = "Unity IAP";
 
 // The initial prompt delays the AssetDatabase.ImportAssetPackage call until after all
-// assemblies are loaded. Without this delay in Unity 5.5 (on Windows specifically), 
+// assemblies are loaded. Without this delay in Unity 5.5 (on Windows specifically),
 // the editor crashes when the method is called with DidReloadScripts.
 #if UNITY_EDITOR_WIN && UNITY_5_5_OR_NEWER
         static bool m_EnableInstallerPrompt = true;
@@ -69,7 +69,7 @@ namespace UnityEditor.Purchasing
         private static readonly Artifact[] k_Artifacts =
         {
             // E.g.: new Artifact("Sample.unitypackage", () => ShouldInstallSamplePackage() == true, false),
-            new Artifact("Plugins/UnityPurchasing/UnityChannel.unitypackage", null, false),
+            new Artifact("Plugins/UnityPurchasing/UnityChannel.unitypackage", () => ShouldInstallUnityChannel(), false),
             new Artifact("Plugins/UnityPurchasing/UnityIAP.unitypackage", null, true),
         };
 
@@ -103,13 +103,27 @@ namespace UnityEditor.Purchasing
                 select type).FirstOrDefault();
         }
 
-        private static Type GetUnityChannel()
+        // Assets/Plugins//UnityChannel/UnityStore.dll.meta
+        static readonly string k_UnityChannel_UnityStoreDll = "b4a9e40b1d1574159814dede56a53cb3";
+
+        /// <summary>
+        /// Install UnityChannel if it's not already installed by packman.
+        /// </summary>
+        private static bool ShouldInstallUnityChannel()
         {
-            return (
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                from type in assembly.GetTypes()
-                where type.Name == "UnityStore" && type.GetMethods().Any(m => m.Name == "Initialize")
-                select type).FirstOrDefault();
+            bool result = true;
+
+            // Unity 2017.2 has a package manager where files are stored under the Packages/ folder.
+            // Packages/com.unity.xiaomi@1.0.0/UnityChannel/UnityStore.dll
+            string path = AssetDatabase.GUIDToAssetPath(k_UnityChannel_UnityStoreDll);
+            if (m_Trace) Debug.Log("ShouldInstallUnityChannel path = " + path);
+
+            if (!string.IsNullOrEmpty(path) && path.StartsWith("Packages/"))
+            {
+                return false;
+            }
+
+            return result;
         }
 
 #if UNITY_5_3 || UNITY_5_3_OR_NEWER
@@ -390,15 +404,22 @@ namespace UnityEditor.Purchasing
 
                     if (artifact.ShouldInstall())
                     {
+                        if (m_Trace) Debug.Log("Artifact.ShouldInstall passed: importing ...");
+
                         // Start async ImportPackage operation, causing one or more
                         // Domain Reloads as a side-effect
-                        AssetDatabase.ImportPackage(artifact.AssetPath(), artifact.InstallInteractively());
+                        if (k_RunningInBatchMode)
+                            AssetDatabase.ImportPackage(artifact.AssetPath(), false);
+                        else
+                            AssetDatabase.ImportPackage(artifact.AssetPath(), artifact.InstallInteractively());
                         // All in-memory values hereafter may be cleared due to Domain
                         // Reloads by async ImportPackage operation
                         EditorApplication.delayCall += OnStepCallback;
                     }
                     else
                     {
+                        if (m_Trace) Debug.Log("Artifact.ShouldInstall failed: moving on to next artifact");
+
                         OnStep(); // WARNING: recursion
                     }
 

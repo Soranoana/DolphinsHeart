@@ -34,9 +34,9 @@ public class fishRandomSpawn : MonoBehaviour
     void Start()
     {
         generated = false;
-        fieldx = /*(int)Terrain.activeTerrain.terrainData.size.x*/500;
+        fieldx = 500;
         fieldy = 150;
-        fieldz = /*(int)Terrain.activeTerrain.terrainData.size.z*/500;
+        fieldz = 500;
         fishMax = 100;
         existFish = new GameObject[fishMax];
     }
@@ -45,7 +45,10 @@ public class fishRandomSpawn : MonoBehaviour
     {
         //	Random.Range
         Generate();
-
+        /* 当コンポーネントを削除 */
+        if (generated) {
+            Destroy(this);
+        }
     }
 
     void Generate()

@@ -6,6 +6,13 @@ TagManager:
   tags:
   - posePoint
   - SeaUpper
+  - Fish
+  - Enemy
+  - terrain
+  - Bubble
+  - Sunlight
+  - MapPoint
+  - MapOption
   layers:
   - Default
   - TransparentFX
@@ -17,12 +24,12 @@ TagManager:
   - 
   - Minimap
   - SeaUpper
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - sunligh
+  - terrain
+  - minimapIcon
+  - player
+  - MapPoint
+  - nonHitLayer
   - 
   - 
   - 

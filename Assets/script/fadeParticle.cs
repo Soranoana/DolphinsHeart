@@ -67,6 +67,7 @@ public class fadeParticle : MonoBehaviour {
         }
         //        gameObject.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1, 1.0f * fade / 100);
         GetComponent<ParticleSystem>().startLifetime = (float)(100 * fade/100);
+        
     }
     /*
     private void OnTriggerEnter(Collider other)

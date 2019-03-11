@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class poseMode : MonoBehaviour {
 
+    public GameObject sceneloader;
+
 	void Start () {
 		
 	}
@@ -15,6 +17,7 @@ public class poseMode : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player") {
+            sceneloader.GetComponent<SceneLoader>().loadtest();
             GameObject.FindWithTag("Player").GetComponent<playerControl>().toPoseMode(true);
         }
     }

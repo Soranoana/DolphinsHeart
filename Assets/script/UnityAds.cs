@@ -7,7 +7,8 @@ public class UnityAds : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Advertisement.Initialize("");
+        //Advertisement.Initialize("");
+        
 	}
 	
 	// Update is called once per frame
@@ -16,8 +17,8 @@ public class UnityAds : MonoBehaviour {
 	}
 
     public void ShowAd() {
-        if (Advertisement.IsReady()) {
+        /*if (Advertisement.IsReady()) {
             Advertisement.Show();
-        }
+        }*/
     }
 }

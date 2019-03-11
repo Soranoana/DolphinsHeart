@@ -6,15 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class ui : MonoBehaviour {
 
-    /* UI一覧         表記例                                 内容
-     * life           命：★★★                             命。攻撃、衝突などで減る。ゼロになると死ぬ。
-     * stamina        満腹度：★★★                         スタミナ。時間で減少。ゼロになると速く泳げなくなる
-     * speed          スピード：★★★                       スピード。今のスピード
-     * fieldName      マップ：太平洋の海面付近（朝）         マップ名。（）が時間帯。
-     * fish           エサ：700                              保有している小魚数。
-     * fieldFishNum   近くのエサ：25                         マップ中にいる小魚数
-     * enemy          天敵：5                                サメなどのエネミーの数。
-     * o2             酸素：70                               残り酸素
+    /* UI一覧         表記例                                 内容                                                  実装状態
+     * life           命：★★★                             命。攻撃、衝突などで減る。ゼロになると死ぬ。          表示、回復、ダメージは実装。ゲームオーバーと成長システムは未実装。
+     * stamina        満腹度：★★★                         スタミナ。時間で減少。ゼロになると速く泳げなくなる    減少は実装済み。回復はシーンの実行。
+     * speed          スピード：★★★                       スピード。今のスピード                                実装済み。成長システムの分のデバッグ必要
+     * fieldName      マップ：太平洋の海面付近（朝）         マップ名。（）が時間帯。                              仮実装。時間の概念を入れてない。量産前。
+     * fish           エサ：700                              保有している小魚数。                                  実装済み。データはデモ
+     * fieldFishNum   近くのエサ：25                         マップ中にいる小魚数                                  実装済み。デバッグ用に数字表示中
+     * enemy          天敵：5                                サメなどのエネミーの数。                              実装済み。デバッグ用に数字表示中
+     * o2             酸素：70                               残り酸素                                              実装済み。デバッグ用に数字表示中
      */
 
     // private GameObject pose;
@@ -35,17 +35,25 @@ public class ui : MonoBehaviour {
 	void Start () {
         PlayerControl = GetComponent<playerControl>();
         fieldNameString = getCurrentFieldName();
+        if (PlayerPrefs.GetInt("tfpsValue")<=0) {
+            GameObject.Find("leftUIPanel").transform.localPosition = GameObject.Find("leftUIPosisionForTPS").transform.localPosition;
+            GameObject.Find("PlaneForMinimaps").transform.localPosition = GameObject.Find("minimapPosisionForTPS").transform.localPosition;
+        } else if (PlayerPrefs.GetInt("tfpsValue")>=1) {
+            GameObject.Find("leftUIPanel").transform.localPosition = GameObject.Find("leftUIPosisionForFPS").transform.localPosition;
+            GameObject.Find("PlaneForMinimaps").transform.localPosition = GameObject.Find("minimapPosisionForFPS").transform.localPosition;
+        }
     }
 	
 	void Update () {
-        life.GetComponent<TextMesh>().text = "test★★★";
+        //life.GetComponent<TextMesh>().text = "test★★★";
+        life.GetComponent<TextMesh>().text = getCurrentLifeString();
         stamina.GetComponent<TextMesh>().text = getHungryString();
         speed.GetComponent<TextMesh>().text = getSpeedString();
         fieldName.GetComponent<TextMesh>().text = fieldNameString;
         fish.GetComponent<TextMesh>().text= PlayerPrefs.GetInt("currentFish").ToString();
-        fieldFishNum.GetComponent<TextMesh>().text = "test50";
-        o2Num.GetComponent<TextMesh>().text = "test50";
-        //enemy.GetComponent<TextMesh>().text = "5";
+        fieldFishNum.GetComponent<TextMesh>().text = getCurrentFieldFishSum();//"test50";
+        o2Num.GetComponent<TextMesh>().text = getCurrentO2();
+        enemy.GetComponent<TextMesh>().text = getCurrentEnemySum();
         /*
         pose = GameObject.Find("pose");
         active = GameObject.Find("active");
@@ -74,6 +82,7 @@ public class ui : MonoBehaviour {
          * など
          */
     }
+
     private string getSpeedString() {
         string speedText = "";
         for (int i = 0; i < PlayerControl.speedModeChagable; i++) {
@@ -81,11 +90,53 @@ public class ui : MonoBehaviour {
         }
         return speedText;
     }
+
     private string getHungryString() {
         string hungryText = "";
         for (int i = 0; (float)i < PlayerPrefs.GetFloat("hungryPoint"); i++) {
             hungryText += "★";
         }
         return hungryText;
+    }
+
+    private string getCurrentLifeString() {
+        string lifeText = "";
+        for (int i = 0; (float)i < (float)(PlayerPrefs.GetInt("lifePoint") /20); i++)
+        {
+            lifeText += "★";
+        }
+        return lifeText + PlayerPrefs.GetInt("lifePoint").ToString();
+    }
+
+    private string getCurrentFieldFishSum() {
+        GameObject[] fish;
+        fish = GameObject.FindGameObjectsWithTag("Fish");
+        string fishText = "";
+        for (int i = 0; (float)i < fish.Length / 20; i++)
+        {
+            fishText += "★";
+        }
+        return fishText+fish.Length.ToString();
+    }
+
+    private string getCurrentO2() {
+        string o2Text = "";
+        for (int i = 0; (float)i < GameObject.FindGameObjectWithTag("Player").GetComponent<playerControl>().o2 / 20; i++)
+        {
+            o2Text += "★";
+        }
+        return o2Text+ GameObject.FindGameObjectWithTag("Player").GetComponent<playerControl>().o2.ToString();
+    }
+
+    private string getCurrentEnemySum()
+    {
+        GameObject[] enemy;
+        enemy = GameObject.FindGameObjectsWithTag("Enemy");
+        string enemyText = "";
+        for (int i = 0; (float)i < enemy.Length; i++)
+        {
+            enemyText += "★";
+        }
+        return enemyText + enemy.Length.ToString();
     }
 }

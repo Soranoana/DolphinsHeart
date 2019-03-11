@@ -14,7 +14,8 @@ public class optionItenLocal : MonoBehaviour {
     private Vector3 childScale;
 
     void Start() {
-        parent = GameObject.Find("Canvas").GetComponent<optionItemAdministar>();
+        //        parent = GameObject.Find("CanvasShop").GetComponent<optionItemAdministar>();
+        parent = transform.parent.gameObject.transform.parent.gameObject.transform.parent.GetComponent<optionItemAdministar>();
         toggle = transform.Find("Toggle").GetComponent<Toggle>();
         transform.Find("Text").gameObject.GetComponent<Text>().text = parent.getContentName(transform.name);
         getChildObject();

@@ -11,8 +11,8 @@ public class button : MonoBehaviour {
 
     void Start () {
         /* buttonToTile */
-        parent = GameObject.Find("Canvas").GetComponent<optionItemAdministar>();
-        parentSlider = GameObject.Find("Canvas").GetComponent<sliderAdministar>();
+//        parent = GameObject.Find("Canvas").GetComponent<optionItemAdministar>();
+//        parentSlider = GameObject.Find("Canvas").GetComponent<sliderAdministar>();
     }
 
     void Update () {
@@ -60,6 +60,7 @@ public class button : MonoBehaviour {
         }
         if (transform.name == "ButtonGame")         //タイトルからかぶってー画面、ゲームへ
         {
+            Debug.Log("run");
             if (PlayerPrefs.GetInt("vrValue") == 0)
             {           //通常モード
                 SceneManager.LoadScene("cameraTest2");

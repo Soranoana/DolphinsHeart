@@ -18,7 +18,7 @@ public class miniMapsTruckPlayer : MonoBehaviour {
 	void Update () {
         playerPos = playerObj.transform.position;
         seaUpperPos = seaUpper.transform.position;
-        playerPos.y = seaUpperPos.y;
+        playerPos.y = 170;// seaUpperPos.y;
         transform.position = playerPos;
         transform.rotation = cameraQ;
 	}
