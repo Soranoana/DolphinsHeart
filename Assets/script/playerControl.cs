@@ -684,7 +684,7 @@ public class playerControl : MonoBehaviour {
             if (PlayerPrefs.GetInt("vrValue") <= 0/* nonVR */)
             {
                 /* Q E　による加減速 */
-                if (Input.GetKeyDown(KeyCode.Q)||_joystickbottun_down.IsPushDown())
+                if (Input.GetKeyDown(KeyCode.Q)||/*_joystickbottun_down.IsPushDown()*/false)
                 {
                     if (speedModeChagable > 0)
                     {
@@ -701,7 +701,7 @@ public class playerControl : MonoBehaviour {
                         }
                     }
                 }
-                if (Input.GetKeyDown(KeyCode.E)||_joystickbottun_up.IsPushDown())
+                if (Input.GetKeyDown(KeyCode.E)||/*_joystickbottun_up.IsPushDown()*/false)
                 {
                     if (speedModeChagable < 15/**ショップ拡張より*/)
                     {
@@ -737,9 +737,9 @@ public class playerControl : MonoBehaviour {
                     speedMode = 0;
                     count = 0;
                 }
-                if (_joystick_move.Position.x!=0||_joystick_move.Position.y!=0) {
-                    this.gameObject.transform.localEulerAngles+=new Vector3(_joystick_move.Position.y*-1, _joystick_move.Position.x, 0)*( 1+0.5f*/**ショップ拡張の回転角*/0 );
-                }
+                //if (_joystick_move.Position.x!=0||_joystick_move.Position.y!=0) {
+                //    this.gameObject.transform.localEulerAngles+=new Vector3(_joystick_move.Position.y*-1, _joystick_move.Position.x, 0)*( 1+0.5f*/**ショップ拡張の回転角*/0 );
+                //}
             }
             else if (PlayerPrefs.GetInt("vrValue") >= 1/* VR */) {
                 /* Q E　による加減速 */

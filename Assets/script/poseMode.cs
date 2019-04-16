@@ -11,7 +11,6 @@ public class poseMode : MonoBehaviour {
 	}
 	
 	void Update () {
-		
 	}
 
     private void OnTriggerEnter(Collider other)
