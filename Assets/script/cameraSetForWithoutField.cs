@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 //using UnityEngine.SceneManagement;
-using UnityEngine.VR;
+using UnityEngine.XR;
 
-public class cameraSetForWithoutField : MonoBehaviour {
+public class cameraSetForWithoutField : MonoBehaviour
+{
 
-	void Start () {
+    void Start()
+    {
         /* Fieldシーン以外なら基本非VRモード */
         UnityEngine.XR.XRSettings.enabled = false;
         UnityEngine.XR.XRSettings.eyeTextureResolutionScale = 10f;

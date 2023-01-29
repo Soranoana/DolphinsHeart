@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityStandardAssets;
 using UnityStandardAssets.ImageEffects;
-using UnityScript;
 //VRサポート
 using UnityEngine.XR;
 
 /* ジャイロで回転させる + playerの移動 */
-public class playerControl : MonoBehaviour {
+public class playerControl : MonoBehaviour
+{
 
     /*private GUIStyle labelStyle;
     Quaternion start_gyro;*/
@@ -57,7 +57,7 @@ public class playerControl : MonoBehaviour {
     /* lateStart用 */
     private bool late;
     private int countLate;
-    
+
     /* ポーズモード */
     public bool pose;
 
@@ -81,13 +81,13 @@ public class playerControl : MonoBehaviour {
     private Vector3 wasPosition;    //前の座標（今の座標と比較して移動距離を算出）
 
     /* ライフ */
-//    protected int lifePoint;          //体力の総量
-//    private int lifeMax;            //体力上限
+    //    protected int lifePoint;          //体力の総量
+    //    private int lifeMax;            //体力上限
 
     /* 酸素 */
-    private int o2Max=100;
-    public int o2=100;
-    private float o2time=0;
+    private int o2Max = 100;
+    public int o2 = 100;
+    private float o2time = 0;
 
     /* ダメージノックバック */
     //private bool knockBacking = false;
@@ -119,10 +119,11 @@ public class playerControl : MonoBehaviour {
     public joystickbottun _joystickbottun_down = null;
     public joystickbottun _joystickbottun_up = null;
 
-    void Start () {
+    void Start()
+    {
         /* カメラ処理 */
-        #if UNITY_EDITOR
-            Input.gyro.enabled = false;
+#if UNITY_EDITOR
+        Input.gyro.enabled = false;
 #elif UNITY_IOS
             Input.gyro.enabled = true;
 #elif UNITY_STANDALONE_OSX
@@ -144,10 +145,13 @@ public class playerControl : MonoBehaviour {
         /* test用 */
         PlayerPrefs.SetFloat("hungryPoint", 100.0f);
         /* camera初期化 */
-        if (PlayerPrefs.GetInt("vrValue") == 0) {
+        if (PlayerPrefs.GetInt("vrValue") == 0)
+        {
             /* 通常カメラ */
             XRSettings.enabled = false;
-        } else {
+        }
+        else
+        {
             /* VRモード */
             /* VR有効化 */
             XRSettings.enabled = true;
@@ -156,13 +160,16 @@ public class playerControl : MonoBehaviour {
             /* ヘッドセット位置をカメラの位置に変更 */
             InputTracking.Recenter();
             /* 位置トラッキング無効 */
-            InputTracking.disablePositionalTracking=true;
+            InputTracking.disablePositionalTracking = true;
         }
-        if (PlayerPrefs.GetInt("tfpsValue") == 0) {
+        if (PlayerPrefs.GetInt("tfpsValue") == 0)
+        {
             /* TPS */
             FPScamera.SetActive(false);
             TPScamera.SetActive(true);
-        } else {
+        }
+        else
+        {
             /* FPS */
             FPScamera.SetActive(true);
             TPScamera.SetActive(false);
@@ -227,31 +234,42 @@ public class playerControl : MonoBehaviour {
 
         /* Canvas3D */
         canvas3D = GameObject.Find("Canvas3D");
-        if (true/* Canvas3D使用か */) {
+        if (true/* Canvas3D使用か */)
+        {
             canvas3D.transform.position = GameObject.FindGameObjectWithTag("MainCamera").transform.position + new Vector3(0, 0, 4);
-        } else {
+        }
+        else
+        {
             canvas3D.SetActive(false);
         }
     }
 
-    void Update() {
-        if (late) {
+    void Update()
+    {
+        if (late)
+        {
             lateStart();
         }
 
         underTheSea();
 
         /* ポーズ状態用首振り(VR)・解除(nonVR)確認 */
-        if (pose) {
-            if (PlayerPrefs.GetInt("vrValue")>=1/* VR */) {
+        if (pose)
+        {
+            if (PlayerPrefs.GetInt("vrValue") >= 1/* VR */)
+            {
                 isShakeHead();
 
-                if (shaked) {
+                if (shaked)
+                {
                     toPoseMode(false);
                     shaked = false;
                 }
-            } else if (PlayerPrefs.GetInt("vrValue")<=0/* nonVR */) {
-                if (Input.GetKey(KeyCode.E)) {
+            }
+            else if (PlayerPrefs.GetInt("vrValue") <= 0/* nonVR */)
+            {
+                if (Input.GetKey(KeyCode.E))
+                {
                     toPoseMode(false);
                     shaked = false;
                 }
@@ -259,7 +277,7 @@ public class playerControl : MonoBehaviour {
         }
         /* 操作方法 */
 #if UNITY_EDITOR
-            ControllerOnUnityPC();
+        ControllerOnUnityPC();
 #elif UNITY_ANDROID
             if(/* Non VRかつジャイロ操作 */true || /* VR */ true){
                 cameraController();
@@ -286,27 +304,38 @@ public class playerControl : MonoBehaviour {
 #endif
 
         //勝手に前に進む(ただし、海面より下の時のみ)
-        if (!notAddForce){
-            if (PlayerPrefs.GetFloat("hungryPoint") > 0) {                                      //通常状態
+        if (!notAddForce)
+        {
+            if (PlayerPrefs.GetFloat("hungryPoint") > 0)
+            {                                      //通常状態
                 playerRigid.velocity = transform.forward * modeSpeed * changableSpeed * 1.0f;
-            } else if (PlayerPrefs.GetFloat("hungryPoint") <= 0) {                              //空腹時
+            }
+            else if (PlayerPrefs.GetFloat("hungryPoint") <= 0)
+            {                              //空腹時
                 playerRigid.velocity = transform.forward * modeSpeed * changableSpeed * 0.2f;
             }
 
         }
 
         //一定時間同じ方向で加速
-        if (speedMode == 0) {
-            if (speedCount > count) {
+        if (speedMode == 0)
+        {
+            if (speedCount > count)
+            {
                 count++;
-            } else {
+            }
+            else
+            {
                 speedMode = 1;//加速状態に変更
                 count = 0;  //加速カウントをゼロ
             }
         }
-        if (speedMode == 0) {
+        if (speedMode == 0)
+        {
             modeSpeed = 2f;
-        } else if (speedMode == 1) {
+        }
+        else if (speedMode == 1)
+        {
             modeSpeed = 2f;
         }
 
@@ -337,7 +366,8 @@ public class playerControl : MonoBehaviour {
         /* 移動距離算出 */
         runDistance += Vector3.Distance(wasPosition, transform.position);
         wasPosition = transform.position;
-        if (runDistance >= hungryDistance) {
+        if (runDistance >= hungryDistance)
+        {
             PlayerPrefs.SetFloat("hungryPoint", PlayerPrefs.GetFloat("hungryPoint") - 1f);
             runDistance = 0;
         }
@@ -349,27 +379,33 @@ public class playerControl : MonoBehaviour {
         O2Administer();
 
         /* ノックバック */
-        if (knockBackVec != Vector3.zero) {
+        if (knockBackVec != Vector3.zero)
+        {
             knockBack();
         }
     }
 
     /* 海面越え対策 */
-    private void underTheSea() {
+    private void underTheSea()
+    {
         /* 海面より上なら重力+加速禁止 */
-        if (transform.position.y >= sea.transform.position.y) {
+        if (transform.position.y >= sea.transform.position.y)
+        {
             playerRigid.useGravity = true;
-            Physics.gravity = new Vector3(0, -9.81f*2,0);
+            Physics.gravity = new Vector3(0, -9.81f * 2, 0);
             notAddForce = true;
             O2Administer(1);
-        } else {
-            playerRigid.useGravity =false;
+        }
+        else
+        {
+            playerRigid.useGravity = false;
             //Physics.gravity = new Vector3(0, -9.81f * 0.4f,0);
             notAddForce = false;
         }
     }
 
-    private void ControllerOnAndroid() {
+    private void ControllerOnAndroid()
+    {
         /* Android用 */
         localRota = this.gameObject.transform.localEulerAngles;     //x,z軸用
         worldRote = this.gameObject.transform.rotation;             //y軸用
@@ -379,7 +415,8 @@ public class playerControl : MonoBehaviour {
          * 端末を下に傾けると0～10などになる
          * /
         /* 動いた処理（減速モードへ） */
-        if ((localRota.x > 10 || localRota.x < 350)|| Mathf.Abs(worldRote.y - startWorldRote.y) >= 0.2){ 
+        if ((localRota.x > 10 || localRota.x < 350) || Mathf.Abs(worldRote.y - startWorldRote.y) >= 0.2)
+        {
             speedMode = 0;
             count = 0;
         }
@@ -389,13 +426,19 @@ public class playerControl : MonoBehaviour {
          * 端末を左に傾けると0～10などになる
          * /
         /* 加速処理 */
-        if (localRota.z >= 180 && localRota.z <340) { 
-            if (!waitForAdd) {
+        if (localRota.z >= 180 && localRota.z < 340)
+        {
+            if (!waitForAdd)
+            {
                 waitForAdd = true;
-            } else if (waitForAdd) {
-                if (countForAdd >= 30 && !changed) {
+            }
+            else if (waitForAdd)
+            {
+                if (countForAdd >= 30 && !changed)
+                {
                     //E
-                    if (speedModeChagable < 3) {
+                    if (speedModeChagable < 3)
+                    {
                         speedModeChagable++;
                         changed = true;
                     }
@@ -404,25 +447,34 @@ public class playerControl : MonoBehaviour {
                 }
             }
         }
-        if (localRota.z >= 350 || localRota.z < 180) {
+        if (localRota.z >= 350 || localRota.z < 180)
+        {
             changed = false;
 
         }
-        if (waitForAdd) {
+        if (waitForAdd)
+        {
             countForAdd++;
-            if (countForAdd > 200) {
+            if (countForAdd > 200)
+            {
                 countForAdd = 0;
                 waitForAdd = false;
             }
         }
         /* 減速処理 */
-        if(localRota.z <= 180 && localRota.z > 20) {
-            if (!waitForSub) {
+        if (localRota.z <= 180 && localRota.z > 20)
+        {
+            if (!waitForSub)
+            {
                 waitForSub = true;
-            } else if (waitForSub) {
-                if (countForSub >= 30 && !changed) {
+            }
+            else if (waitForSub)
+            {
+                if (countForSub >= 30 && !changed)
+                {
                     //Q
-                    if (speedModeChagable > 0) {
+                    if (speedModeChagable > 0)
+                    {
                         speedModeChagable--;
                         changed = true;
                     }
@@ -432,30 +484,41 @@ public class playerControl : MonoBehaviour {
             }
 
         }
-        if (localRota.z < 10 || localRota.z>180) {
+        if (localRota.z < 10 || localRota.z > 180)
+        {
             changed = false;
         }
-        if (waitForSub) {
+        if (waitForSub)
+        {
             countForSub++;
-            if (countForSub > 200) {
+            if (countForSub > 200)
+            {
                 countForSub = 0;
                 waitForSub = false;
             }
         }
         /* 速度反映処理 */
-        if (speedModeChagable == 0) {
+        if (speedModeChagable == 0)
+        {
             changableSpeed = 0;
             playerRigid.velocity = Vector3.zero;
-        }else if (speedModeChagable == 1) {
+        }
+        else if (speedModeChagable == 1)
+        {
             changableSpeed = 1f;
-        }else if (speedModeChagable == 2) {
+        }
+        else if (speedModeChagable == 2)
+        {
             changableSpeed = 5f;
-        }else if (speedModeChagable == 3) {
+        }
+        else if (speedModeChagable == 3)
+        {
             changableSpeed = 10f;
         }
 
     }
-    private void ControllerOniOS() {
+    private void ControllerOniOS()
+    {
         /* Android用 */
         localRota = this.gameObject.transform.localEulerAngles;     //x,z軸用
         worldRote = this.gameObject.transform.rotation;             //y軸用
@@ -465,7 +528,8 @@ public class playerControl : MonoBehaviour {
          * 端末を下に傾けると0～10などになる
          * /
         /* 動いた処理（減速モードへ） */
-        if ((localRota.x > 10 || localRota.x < 350) || Mathf.Abs(worldRote.y - startWorldRote.y) >= 0.2) {
+        if ((localRota.x > 10 || localRota.x < 350) || Mathf.Abs(worldRote.y - startWorldRote.y) >= 0.2)
+        {
             speedMode = 0;
             count = 0;
         }
@@ -475,13 +539,19 @@ public class playerControl : MonoBehaviour {
          * 端末を左に傾けると0～10などになる
          * /
         /* 加速処理 */
-        if (localRota.z >= 180 && localRota.z < 340) {
-            if (!waitForAdd) {
+        if (localRota.z >= 180 && localRota.z < 340)
+        {
+            if (!waitForAdd)
+            {
                 waitForAdd = true;
-            }else if (waitForAdd) {
-                if (countForAdd >= 30 && !changed) {
+            }
+            else if (waitForAdd)
+            {
+                if (countForAdd >= 30 && !changed)
+                {
                     //E
-                    if (speedModeChagable < 3) {
+                    if (speedModeChagable < 3)
+                    {
                         speedModeChagable++;
                         changed = true;
                     }
@@ -490,25 +560,34 @@ public class playerControl : MonoBehaviour {
                 }
             }
         }
-        if (localRota.z >= 350 || localRota.z < 180) {
+        if (localRota.z >= 350 || localRota.z < 180)
+        {
             changed = false;
 
         }
-        if (waitForAdd) {
+        if (waitForAdd)
+        {
             countForAdd++;
-            if (countForAdd > 200) {
+            if (countForAdd > 200)
+            {
                 countForAdd = 0;
                 waitForAdd = false;
             }
         }
         /* 減速処理 */
-        if (localRota.z <= 180 && localRota.z > 20) {
-            if (!waitForSub) {
+        if (localRota.z <= 180 && localRota.z > 20)
+        {
+            if (!waitForSub)
+            {
                 waitForSub = true;
-            } else if (waitForSub) {
-                if (countForSub >= 30 && !changed) {
+            }
+            else if (waitForSub)
+            {
+                if (countForSub >= 30 && !changed)
+                {
                     //Q
-                    if (speedModeChagable > 0) {
+                    if (speedModeChagable > 0)
+                    {
                         speedModeChagable--;
                         changed = true;
                     }
@@ -684,7 +763,7 @@ public class playerControl : MonoBehaviour {
             if (PlayerPrefs.GetInt("vrValue") <= 0/* nonVR */)
             {
                 /* Q E　による加減速 */
-                if (Input.GetKeyDown(KeyCode.Q)||/*_joystickbottun_down.IsPushDown()*/false)
+                if (Input.GetKeyDown(KeyCode.Q) ||/*_joystickbottun_down.IsPushDown()*/false)
                 {
                     if (speedModeChagable > 0)
                     {
@@ -701,7 +780,7 @@ public class playerControl : MonoBehaviour {
                         }
                     }
                 }
-                if (Input.GetKeyDown(KeyCode.E)||/*_joystickbottun_up.IsPushDown()*/false)
+                if (Input.GetKeyDown(KeyCode.E) ||/*_joystickbottun_up.IsPushDown()*/false)
                 {
                     if (speedModeChagable < 15/**ショップ拡張より*/)
                     {
@@ -741,7 +820,8 @@ public class playerControl : MonoBehaviour {
                 //    this.gameObject.transform.localEulerAngles+=new Vector3(_joystick_move.Position.y*-1, _joystick_move.Position.x, 0)*( 1+0.5f*/**ショップ拡張の回転角*/0 );
                 //}
             }
-            else if (PlayerPrefs.GetInt("vrValue") >= 1/* VR */) {
+            else if (PlayerPrefs.GetInt("vrValue") >= 1/* VR */)
+            {
                 /* Q E　による加減速 */
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
@@ -759,7 +839,8 @@ public class playerControl : MonoBehaviour {
                             speedModeChagable--;
                         }
                     }
-                } else if (Input.GetKeyDown(KeyCode.E))
+                }
+                else if (Input.GetKeyDown(KeyCode.E))
                 {
                     if (speedModeChagable < 15/**ショップ拡張より*/)
                     {
@@ -799,7 +880,8 @@ public class playerControl : MonoBehaviour {
                         }
                     }
                 }
-                else if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.z >= 360 - HMDShiftKaku || InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.z <= 0 + HMDShiftKaku) {
+                else if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.z >= 360 - HMDShiftKaku || InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.z <= 0 + HMDShiftKaku)
+                {
                     if (shiftchanged)
                     {
                         shiftchanged = false;
@@ -836,12 +918,12 @@ public class playerControl : MonoBehaviour {
                 }
 
                 //HMD左入力で左に回転
-                if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y >= 180 && InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y <= 360 - HMDCurveKaku &&PlayerPrefs.GetInt("vrValue")>=1)
+                if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y >= 180 && InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y <= 360 - HMDCurveKaku && PlayerPrefs.GetInt("vrValue") >= 1)
                 {
                     if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x >= 180) HMDkaku = 360 - InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x;
                     else HMDkaku = InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x;
                     HMDpercent = (360 - InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y) / (360 - InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y + HMDkaku);
-                    this.gameObject.transform.localEulerAngles += new Vector3(0, -1*HMDpercent, 0) * (1 + 0.5f */**ショップ拡張の回転角*/0);
+                    this.gameObject.transform.localEulerAngles += new Vector3(0, -1 * HMDpercent, 0) * (1 + 0.5f */**ショップ拡張の回転角*/0);
                     speedMode = 0;
                     count = 0;
                 }
@@ -851,7 +933,7 @@ public class playerControl : MonoBehaviour {
                     if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x >= 180) HMDkaku = 360 - InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x;
                     else HMDkaku = InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x;
                     HMDpercent = InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y / (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y + HMDkaku);
-                    this.gameObject.transform.localEulerAngles += new Vector3(0, 1*HMDpercent, 0) * (1 + 0.5f */**ショップ拡張の回転角*/0);
+                    this.gameObject.transform.localEulerAngles += new Vector3(0, 1 * HMDpercent, 0) * (1 + 0.5f */**ショップ拡張の回転角*/0);
                     speedMode = 0;
                     count = 0;
                 }
@@ -861,23 +943,23 @@ public class playerControl : MonoBehaviour {
                     if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y >= 180) HMDkaku = 360 - InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y;
                     else HMDkaku = InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y;
                     HMDpercent = InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x / (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x + HMDkaku);
-                    this.gameObject.transform.localEulerAngles += new Vector3(1*HMDpercent, 0, 0) * (1 + 0.5f */**ショップ拡張の回転角*/0);
+                    this.gameObject.transform.localEulerAngles += new Vector3(1 * HMDpercent, 0, 0) * (1 + 0.5f */**ショップ拡張の回転角*/0);
                     speedMode = 0;
                     count = 0;
                 }
                 //HMD上入力で上に回転
-                if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x >= 180&& InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x <= 360- HMDCurveKaku && PlayerPrefs.GetInt("vrValue") >= 1)
+                if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x >= 180 && InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x <= 360 - HMDCurveKaku && PlayerPrefs.GetInt("vrValue") >= 1)
                 {
                     if (InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y >= 180) HMDkaku = 360 - InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y;
                     else HMDkaku = InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.y;
                     HMDpercent = (360 - InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x) / (360 - InputTracking.GetLocalRotation(XRNode.CenterEye).eulerAngles.x + HMDkaku);
-                    this.gameObject.transform.localEulerAngles += new Vector3(-1*HMDpercent, 0, 0) * (1 + 0.5f */**ショップ拡張の回転角*/0);
+                    this.gameObject.transform.localEulerAngles += new Vector3(-1 * HMDpercent, 0, 0) * (1 + 0.5f */**ショップ拡張の回転角*/0);
                     speedMode = 0;
                     count = 0;
                 }
             }
         }
-        
+
     }
 
 
@@ -956,31 +1038,35 @@ public class playerControl : MonoBehaviour {
         }   
     }*/
 
-    private void lateStart() {
+    private void lateStart()
+    {
         countLate++;
         if (countLate >= 10)
         {
             worldRote = this.gameObject.transform.rotation;
             late = false;
             /* ミニマップ配置（立体視システムに干渉されるため） */
-//            GameObject.Instantiate(miniMap);
+            //            GameObject.Instantiate(miniMap);
         }
     }
 
     /* ポーズになるか解除するか */
-    public void toPoseMode(bool inOut) {
+    public void toPoseMode(bool inOut)
+    {
         if (inOut)
         {
             pose = true;
             speedModeChagable = 0;
         }
-        else if (!inOut) {
+        else if (!inOut)
+        {
             pose = false;
         }
     }
 
     /* うなずいているか？ */
-    public void isShakeHead() {
+    public void isShakeHead()
+    {
 
         /* 首を振った瞬間のみ発動 */
         if ((this.gameObject.transform.localEulerAngles.x >= 25 && this.gameObject.transform.localEulerAngles.x <= 335) && !shakeFlg)
@@ -1018,7 +1104,8 @@ public class playerControl : MonoBehaviour {
         shaked = false;
     }
 
-    private void cameraController() {
+    private void cameraController()
+    {
         Input.gyro.enabled = true;
         if (Input.gyro.enabled)
         {
@@ -1031,65 +1118,80 @@ public class playerControl : MonoBehaviour {
     }
 
     //ライフ管理全般
-    private void lifeAdminister() {
-        if (PlayerPrefs.GetInt("lifePoint") <= 0) {
+    private void lifeAdminister()
+    {
+        if (PlayerPrefs.GetInt("lifePoint") <= 0)
+        {
             //ゲームオーバー
             Debug.Log("GameOver");
         }
     }
 
     /* ダメージや回復を行う */
-    public void lifeAdminister(int getPoint) {
+    public void lifeAdminister(int getPoint)
+    {
         PlayerPrefs.SetInt("lifePoint", getPoint + PlayerPrefs.GetInt("lifePoint"));
-        if (PlayerPrefs.GetInt("lifePoint") > PlayerPrefs.GetInt("lifeMax")) {
+        if (PlayerPrefs.GetInt("lifePoint") > PlayerPrefs.GetInt("lifeMax"))
+        {
             PlayerPrefs.SetInt("lifePoint", PlayerPrefs.GetInt("lifeMax"));
         }
     }
 
     /* 酸素管理 */
-    private void O2Administer() {
+    private void O2Administer()
+    {
         o2time += Time.deltaTime;
         /* 酸素消費速度 */
-        if (o2time > 0.5f) {
+        if (o2time > 0.5f)
+        {
             o2--;
             o2time = 0.0f;
         }
-        if (o2 <= 0) {
+        if (o2 <= 0)
+        {
             //ゲームオーバー
         }
         //Debug.Log(o2.ToString());
     }
     /* 酸素消費+回復 */
-    public void O2Administer(int getO2) {
+    public void O2Administer(int getO2)
+    {
         o2 += getO2;
-        if (o2 > o2Max) {
+        if (o2 > o2Max)
+        {
             o2 = o2Max;
         }
     }
 
     /* 衝突処理 対terrain */
-    public void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.tag == "terrain" || collision.gameObject.tag=="Enemy") {
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "terrain" || collision.gameObject.tag == "Enemy")
+        {
             lifeAdminister(-10);
         }
         speedModeChagable = 0;
         playerRigid.velocity = Vector3.zero;
-        foreach (ContactPoint point in collision.contacts) {
+        foreach (ContactPoint point in collision.contacts)
+        {
             print(point.normal);
             knockBackVec = point.normal;
         }
     }
     /* 衝突処理 対bubble */
-    private void OnTriggerEnter(Collider other) {
-        if (other.gameObject.tag == "Bubble") {
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Bubble")
+        {
             O2Administer(Random.Range(5, 20));
         }
     }
 
     /* ノックバック処理 */
-    private void knockBack() {
+    private void knockBack()
+    {
         playerRigid.AddForce(knockBackVec * 1000, ForceMode.Acceleration);
         knockBackVec -= knockBackVec.normalized * 0.1f;
-       // Debug.Log("call");
+        // Debug.Log("call");
     }
 }
